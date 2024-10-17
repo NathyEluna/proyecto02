@@ -1,0 +1,13 @@
+# Services
+services:
+  # Apache + PHP
+  apache_php_oo:
+    image: php:8.3-apache
+  # Preparamos un volumen para almacenar nuestro código
+    volumes:
+      - ./src/:/var/www/html
+      - ./.docker/apache/000-default.conf:/etc/apache/sites-available/000-default.conf
+    expose:
+      - 80
+    ports:
+      - 8081:80
