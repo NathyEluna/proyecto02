@@ -1,5 +1,4 @@
 <?php
-
 namespace Class;
 
 class Telefono
@@ -12,24 +11,24 @@ class Telefono
         $this->numero = $numero;
     }
 
-    public function getPrefijo(): string
-    {
+    public function getPrefijo():string{
         return $this->prefijo;
     }
 
-    public function setPrefijo(string $prefijo): void
-    {
+    public function setPrefijo(string $prefijo):Telefono{
         $this->prefijo = $prefijo;
+
+        return $this;
     }
 
-    public function getNumero(): string
-    {
+    public function getNumero():string{
         return $this->numero;
     }
 
-    public function setNumero(string $numero): void
-    {
+    public function setNumero(string $numero):Telefono{
         $this->numero = $numero;
+
+        return $this;
     }//construct
 
     public function comprobarPrefijo():bool{
@@ -39,8 +38,7 @@ class Telefono
 
     public function obtenerTelefonoFormateado():string{
         //TODO crear la funcion para obtener el telefono formateado.
-        $telefono = "123";
-        return $telefono;
+        return "telefono";
     }
 
 }//class

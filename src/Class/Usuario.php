@@ -1,35 +1,34 @@
 <?php
-
 namespace Class;
+include_once "Enum/TipoUsuario.php";
 use Class\Enum\TipoUsuario;
-
+use DateTime;
 class Usuario
 {
     private string $username;
     private string $password;
     private string $dni;
     private string $email;
-    private \DateTime $fechaNac;
+    private DateTime $fechaNac;
     private string $name;
     private string $surname;
     private string $direccion;
-    private array $telefono;
-    private array $reservas;
-
+    public array $telefono;
+    public array $reservas;
     private string $tarjertaPago;
     private float $calificacion;
     private TipoUsuario $tipoUser;
-    private array $datosAdicionales;
+    public array $datosAdicionales;
 
     //Métodos de la clase Usuario
 
     public function __construct(){
         //$this->reservas = [];
         $this->reservas = array();
-        $this->telefonos = array();
+        $this->telefono = array();
         $this->datosAdicionales = array();
         $this->calificacion = 3;
-        $this->tipoUser= TipoUsuario::USER;
+        $this->tipoUser = TipoUsuario::USER;
     }//construct
 
     public function getUsername(): string{
