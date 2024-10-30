@@ -1,5 +1,5 @@
 <?php
-include_once "../environment.php";
+include_once "./environment.php";
 
 
 

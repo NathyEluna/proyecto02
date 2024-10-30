@@ -14,5 +14,4 @@ include_once "template/reviews.php";
 include_once "template/blog.php";
 include_once "template/footer.php";
 include_once "template/modal.php";
-
 include_once "template/final.php";

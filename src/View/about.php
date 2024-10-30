@@ -1,6 +1,6 @@
 <?php
 $titulo="Sobre Nosotros";
-include_once "../environment.php";
+include_once "./environment.php";
 include_once "template/inicio.php";
 include_once "template/arribaNavegacion.php";
 include_once "template/navegacion.php";
