@@ -14,16 +14,16 @@
                     <a class="nav-link" href="/">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?=DIRECTORIO_VISTAS?>about.php">Sobre Nosotros</a>
+                    <a class="nav-link" href="/about">Sobre Nosotros</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?=DIRECTORIO_VISTAS?>login.php">Servicios</a>
+                    <a class="nav-link" href="/login">Servicios</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#portfolio">Clientes</a>
+                    <a class="nav-link" href="/clientes">Clientes</a>
                 </li>
             </ul>
-            <a href="<?=DIRECTORIO_VISTAS?>login.php" class="btn btn-brand ms-lg-3">Inciar Sesión</a>
+            <a href="/login" class="btn btn-brand ms-lg-3">Inciar Sesión</a>
         </div>
     </div>
 </nav>
