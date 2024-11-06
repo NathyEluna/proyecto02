@@ -1,5 +1,5 @@
 <?php
-namespace Class\Enum;
+namespace App\Class\Enum;
 enum MetodoPago{
     case PAYPAL;
     case APPLE_PAY;

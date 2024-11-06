@@ -23,7 +23,7 @@ include_once "template/navegacion.php";
         <div class="row g-4">
             <div class="col-lg-6 col-md-8">
                 <div class="service">
-                    <h5>Inciciar Sesión</h5>
+                    <h5>Iniciar Sesión</h5>
                     <form method="post" action="/login">
                         <div class="mb-3">
                             <label class="form-label" for="user">Nombre de usuario</label>

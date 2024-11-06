@@ -1,0 +1,19 @@
+{
+    "name": "nathalia/proyecto02",
+    "description": "Proyecto de prueba",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nathália Rosa",
+            "email": "natmicros@alu.edu.gva.es"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "ramsey/uuid": "^4.7"
+    },
+    "autoload": {
+        "psr-4": {"App\\": "App/"}
+    }
+}

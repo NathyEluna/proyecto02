@@ -1,7 +1,7 @@
 <?php
 
-namespace Class;
-use Class\Cliente;
+namespace App\Class;
+use App\Class\Cliente;
 class Restaurante extends Cliente{
     private int $mesas;
     private string $menu;

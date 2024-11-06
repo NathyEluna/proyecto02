@@ -3,9 +3,9 @@ include_once "Class/Usuario.php";
 include_once "Class/Enum/TipoUsuario.php";
 include_once "Class/Telefono.php";
 
-use Class\Usuario;
-use Class\Enum\TipoUsuario;
-use Class\Telefono;
+use App\Class\Usuario;
+use App\Class\Enum\TipoUsuario;
+use App\Class\Telefono;
 
 echo "Esto son ejemplos de orientado a objetos en PHP";
 

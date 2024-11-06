@@ -1,8 +1,8 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
 include_once "InterfaceController.php";
-use Controller\InterfaceController;
+use App\Controller\InterfaceController;
 
 class ReservasController implements InterfaceController
 {

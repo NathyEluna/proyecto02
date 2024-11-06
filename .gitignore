@@ -1,0 +1,3 @@
+/.docker/mariadb
+/src/composer.lock
+/src/vendor/

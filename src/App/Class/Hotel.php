@@ -1,6 +1,8 @@
 <?php
 
-namespace Class;
+namespace App\Class;
+
+use App\Class\Cliente;
 
 class Hotel extends Cliente
 {

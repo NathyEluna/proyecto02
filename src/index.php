@@ -1,21 +1,19 @@
 <?php
-include_once "Router/Router.php";
-include_once "Controller/UsuarioController.php";
-include_once "Controller/ClienteController.php";
-include_once "Controller/ReservasController.php";
-use Router\Router;
-use Controller\UsuarioController;
-use Controller\ClienteController;
-use Controller\ReservasController;
+include_once "environment.php";
+include_once "vendor/autoload.php";
+use App\Router\Router;
+use App\Controller\UsuarioController;
+use App\Controller\ClienteController;
+use App\Controller\ReservasController;
 
 $router = new Router();
 
 //Mostraría una landing page
 $router->addRoute("GET", "/", function(){
-    include_once "View/landing.php";
+    include_once DIRECTORIO_VISTAS."landing.php";
 });
 $router->addRoute("GET", "/about", function(){
-    include_once "View/about.php";
+    include_once DIRECTORIO_VISTAS."about.php";
 });
 
 //Rutas enlazadas a controladores, logica de la aplicacion

@@ -1,25 +1,31 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
 include_once "InterfaceController.php";
-use Controller\InterfaceController;
+use App\Controller\InterfaceController;
+use Ramsey\Uuid\Uuid;
 
 class UsuarioController implements InterfaceController
 {
     //GET /users
     public function index(){
-        include_once "../View/Users/indexUser.php";
+        include_once __DIR__."/../View/Users/indexUser.php";
     }
 
     //GET /users/create
     public function create(){
-        //Aqui mostrariamos el formulario de registro
-        echo "Formulario de registro de usuario.";
+        include_once __DIR__."/../View/Users/createUser.php";
     }
 
     //POST /users
     public function store(){
         //Guardaria en la base de datos el usuario
+
+        //Validación del usuario. En packagist instalar la libreria symfony/validator.
+
+        //Creación del usuario
+
+        echo Uuid::uuid4();
         echo "Funcion para guardar un usuario.";
     }
 
