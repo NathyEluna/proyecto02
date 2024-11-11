@@ -6,7 +6,7 @@ class Telefono
     private string $prefijo;
     private string $numero;
 
-    public function __construct(string $prefijo, string $numero){
+    public function __construct(string $numero, string $prefijo = "+34"){
         $this->prefijo = $prefijo;
         $this->numero = $numero;
     }
@@ -39,6 +39,26 @@ class Telefono
     public function obtenerTelefonoFormateado():string{
         //TODO crear la funcion para obtener el telefono formateado.
         return "telefono";
+    }
+
+    public static function crearTelefonoDesdeString(string $telefono):Telefono{
+        $telefonoSinEspacio = trim($telefono);
+        $numero = Telefono::obtenerNumeroDesdeUnString($telefonoSinEspacio);
+        $prefijo = Telefono::obtenerPrefijoDesdeUnString($telefonoSinEspacio);
+
+        return new Telefono($numero, $prefijo);
+    }
+
+    private static function obtenerNumeroDesdeUnString(string $telefono):string{
+
+        //TODO crear la funcion para obtener el numero de un string
+        return "telefono";
+    }
+
+    private static function obtenerPrefijoDesdeUnString(string $telefono):string{
+
+
+        return "prefijo";
     }
 
 }//class

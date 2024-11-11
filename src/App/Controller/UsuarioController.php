@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 include_once "InterfaceController.php";
+
+use App\Class\Usuario;
 use App\Controller\InterfaceController;
 use Ramsey\Uuid\Uuid;
 
@@ -21,7 +23,9 @@ class UsuarioController implements InterfaceController
     public function store(){
         //Guardaria en la base de datos el usuario
 
+
         //Validación del usuario. En packagist instalar la libreria symfony/validator.
+        Usuario::filtrarDatosUsuario($_POST);
 
         //Creación del usuario
 
