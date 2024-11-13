@@ -16,6 +16,18 @@ $router->addRoute("GET", "/about", function(){
     include_once DIRECTORIO_VISTAS."about.php";
 });
 
+$router->addRoute('get','/login',function(){
+    include_once DIRECTORIO_VISTAS . "login.php";
+});
+
+$router->addRoute('get','/services',function(){
+    include_once DIRECTORIO_VISTAS . "services.php";
+});
+
+$router->addRoute('get','/contact',function(){
+    include_once DIRECTORIO_VISTAS."contacto.php";
+});
+
 //Rutas enlazadas a controladores, logica de la aplicacion
 //Usuarios
 $router->addRoute("GET", "/users", [UsuarioController::class, "index"]);

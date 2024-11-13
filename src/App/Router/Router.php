@@ -18,8 +18,14 @@ class Router
 
     public function resolver(string $metodohttp, string $url){
         //Logica para crear una instancia y llamar al metodo de la clase
-        echo $metodohttp."<br>".$url;
+        //echo $metodohttp."<br>".$url;
         $uriExplotada = explode( "/", $url);
+
+        if (isset($this->rutas[$metodohttp][$this->cambiarIdUri($url)])){
+            $accion=$this->rutas[$metodohttp][$this->cambiarIdUri($url)];
+        }else{
+            return include_once DIRECTORIO_VISTAS."404.php";
+        }
 
         $accion=$this->rutas[$metodohttp][$this->cambiarIdUri($url)];
 

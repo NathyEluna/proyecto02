@@ -31,9 +31,8 @@ class Telefono
         return $this;
     }//construct
 
-    public function comprobarPrefijo():bool{
-        //TODO crear la funcion para comprobar el prefijo.
-        return true;
+    public function comprobarPrefijo(string $prefijo):bool{
+        return isset($prefijos[$prefijo])?true:false;
     }
 
     public function obtenerTelefonoFormateado():string{
@@ -41,24 +40,51 @@ class Telefono
         return "telefono";
     }
 
-    public static function crearTelefonoDesdeString(string $telefono):Telefono{
-        $telefonoSinEspacio = trim($telefono);
-        $numero = Telefono::obtenerNumeroDesdeUnString($telefonoSinEspacio);
-        $prefijo = Telefono::obtenerPrefijoDesdeUnString($telefonoSinEspacio);
+    public static function crearTelefonoDesdeString(string $telefono):?Telefono{
+        $telefonoSinEspacios = trim($telefono);
+        $numero = Telefono::obtenerNumeroDesdeUnString($telefonoSinEspacios);
+        $prefijo = Telefono::obtenerPrefijoDesdeUnString($telefonoSinEspacios);
 
-        return new Telefono($numero, $prefijo);
+        if($prefijo == null && $numero == null){
+            return null;
+        }elseif($numero == null){
+            return null;
+        }elseif($prefijo == null){
+            return new Telefono($numero);
+        }else{
+            return new Telefono($numero, $prefijo);
+        }
+    }//crear telefono desde string
+
+    private static function obtenerNumeroDesdeUnString(string $telefono):?string{
+        $telefonoSinEspacios = trim($telefono);
+
+        if(strlen($telefonoSinEspacios) < 9){
+            return null;
+        }elseif (strlen($telefonoSinEspacios) === 9){
+            return $telefonoSinEspacios;
+        }else{
+            return substr($telefonoSinEspacios, -9);
+        }
     }
 
-    private static function obtenerNumeroDesdeUnString(string $telefono):string{
+    private static function obtenerPrefijoDesdeUnString(string $telefono):?string{
+        if(strlen($telefono) > 9){
+            $telefonoSinEspacios = trim($telefono);
+            $posicionDondeEmpiezaTelefono = strlen($telefonoSinEspacios)-9;
+            $prefijo = substr($telefonoSinEspacios, 0, $posicionDondeEmpiezaTelefono);
 
-        //TODO crear la funcion para obtener el numero de un string
-        return "telefono";
-    }
+            $prefijoSinSimbolos = "";
 
-    private static function obtenerPrefijoDesdeUnString(string $telefono):string{
+            for($i = 0; $i < strlen($prefijo); $i++){
+                if(is_numeric($prefijo[$i])){
+                    $prefijoSinSimbolos.= $prefijo[$i];
+                }//if
+            }//for
+        }else{
+            return null;
+        }//else
 
-
-        return "prefijo";
-    }
-
+        return $prefijoSinSimbolos;
+    }//obtener prefijo desde string
 }//class

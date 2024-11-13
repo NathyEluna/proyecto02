@@ -188,7 +188,7 @@ class Usuario
                 ->key("usersurname", Validator::stringType())
                 ->key("userpass", Validator::stringType()->length(8, null))
                 ->key("useremail", Validator::email())
-                ->key("uerbirthdate", Validator::date("d/m/Y")->minAge(18, "d/m/Y"))//en minuscula es dos digitos y en mayuscula es 4 digitos.
+                ->key("userbirthdate", Validator::date("d/m/Y")->minAge(18, "d/m/Y"))//en minuscula es dos digitos y en mayuscula es 4 digitos.
                 ->key("useraddress", Validator::stringType())
                 ->key("userphone", Validator::phone())
                 ->key("useraltphone", Validator::optional(Validator::phone()), mandatory: false)
@@ -209,12 +209,21 @@ class Usuario
         $usuario->setSurname($datosUsuarios["usersurname"]??"Sin apellido");
         $usuario->setPassword($datosUsuarios["userpass"]??"Sin contraseña");
         $usuario->setEmail($datosUsuarios["useremail"]??"Sin email");
-        $usuario->setFechaNac($datosUsuarios["userbirthdate"]??"Sin fecha de nacimiento");
+        $usuario->setFechaNac(DateTime::createFromFormat("d/m/Y", $datosUsuarios["userbirthdate"])??"Sin fecha de nacimiento");
         $usuario->setDireccion($datosUsuarios["useraddress"]??"Sin dirección");
-        $usuario->setTelefono($datosUsuarios["userphone"]??"Sin telefono");
-        $usuario->setName($datosUsuarios["username"]??"Sin nombre");
+        $telefonos = [];
 
-        //TODO cambiar el return.
+        if(isset($datosUsuarios["userphone"])){
+            $telefono = Telefono::crearTelefonoDesdeString(($datosUsuarios["userphone"]));
+            $telefonos[] = $telefono;
+        }
+
+        if(isset($datosUsuarios["useraltphone"])){
+            $telefono = Telefono::crearTelefonoDesdeString(($datosUsuarios["useraltphone"]));
+            $telefonos[] = $telefono;
+        }
+        $usuario->setTelefono($telefonos);
+
         return $usuario;
     }
 }//class
