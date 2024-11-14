@@ -37,6 +37,7 @@ class UsuarioController implements InterfaceController
         //Creación del usuario
 
 
+
         //echo Uuid::uuid4();
         echo "Funcion para guardar un usuario.";
     }

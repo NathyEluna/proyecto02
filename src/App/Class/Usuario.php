@@ -19,10 +19,10 @@ class Usuario
     private string $direccion;
     public array $telefono;
     public array $reservas;
-    private string $tarjertaPago;
+    private ?string $tarjertaPago;
     private float $calificacion;
     private TipoUsuario $tipoUser;
-    public array $datosAdicionales;
+    public ?array $datosAdicionales;
 
     //Métodos de la clase Usuario
 
@@ -30,7 +30,8 @@ class Usuario
         //$this->reservas = [];
         $this->reservas = array();
         $this->telefono = array();
-        $this->datosAdicionales = array();
+        $this->datosAdicionales = null;
+        $this->tarjertaPago = null;
         $this->calificacion = 3;
         $this->tipoUser = TipoUsuario::USER;
     }//construct
@@ -117,7 +118,7 @@ class Usuario
         return $this;
     }//setDireccion
 
-    public function getTelefono():array{
+    public function getTelefono():?array{
         return $this->telefono;
     }//getTelefono
 
@@ -126,7 +127,7 @@ class Usuario
         return $this;
     }//setTelefono
 
-    public function getReservas():array{
+    public function getReservas():?array{
         return $this->reservas;
     }//getReservas
 
@@ -135,22 +136,20 @@ class Usuario
         return $this;
     }//setReservas
 
-    public function getTarjertaPago(): string
-    {
+    public function getTarjertaPago():?string{
         return $this->tarjertaPago;
     }//getTarjertaPago
 
-    public function setTarjertaPago(string $tarjertaPago): Usuario
-    {
+    public function setTarjertaPago(string $tarjertaPago):Usuario{
         $this->tarjertaPago = $tarjertaPago;
         return $this;
     }
 
-    public function getCalificacion(): float{
+    public function getCalificacion():float{
         return $this->calificacion;
     }//getCalificacion
 
-    public function setCalificacion(float $calificacion): Usuario{
+    public function setCalificacion(float $calificacion):Usuario{
         $this->calificacion = $calificacion;
         return $this;
     }//setCalificacion
@@ -159,16 +158,16 @@ class Usuario
         return $this->tipoUser;
     }//getTipoUser
 
-    public function setTipoUser(TipoUsuario $tipoUser): Usuario{
+    public function setTipoUser(TipoUsuario $tipoUser):Usuario{
         $this->tipoUser = $tipoUser;
         return $this;
     }//setTipoUser
 
-    public function getDatosAdicionales(): array{
+    public function getDatosAdicionales():?array{
         return $this->datosAdicionales;
     }//getDatosAdicionales
 
-    public function setDatosAdicionales(array $datosAdicionales): Usuario{
+    public function setDatosAdicionales(array $datosAdicionales):Usuario{
         $this->datosAdicionales = $datosAdicionales;
         return $this;
     }//setDatosAdicionales
