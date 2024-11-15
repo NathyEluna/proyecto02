@@ -2,6 +2,7 @@
 namespace App\Class;
 include_once "Enum/TipoUsuario.php";
 use App\Class\Enum\TipoUsuario;
+use App\Model\UsuarioModel;
 use DateTime;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Exceptions\NestedValidationException;
@@ -17,8 +18,8 @@ class Usuario
     private string $name;
     private string $surname;
     private string $direccion;
-    public array $telefono;
-    public array $reservas;
+    public ?array $telefono;
+    public ?array $reservas;
     private ?string $tarjertaPago;
     private float $calificacion;
     private TipoUsuario $tipoUser;
@@ -60,7 +61,7 @@ class Usuario
     }//getPassword
 
     public function setPassword(string $password):Usuario{
-        $this->password = $password;
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
         return $this;
     }//setPassword
 
@@ -206,7 +207,8 @@ class Usuario
         $usuario->setDni($datosUsuarios["userdni"]??"00000000A");
         $usuario->setName($datosUsuarios["username"]??"Sin nombre");
         $usuario->setSurname($datosUsuarios["usersurname"]??"Sin apellido");
-        $usuario->setPassword($datosUsuarios["userpass"]??"Sin contraseña");
+        //Además de almacenar el password lo encriptamos
+        $usuario->setPassword(password_hash($datosUsuarios["userpass"], PASSWORD_DEFAULT)??"Sin contraseña");
         $usuario->setEmail($datosUsuarios["useremail"]??"Sin email");
         $usuario->setFechaNac(DateTime::createFromFormat("d/m/Y", $datosUsuarios["userbirthdate"])??"Sin fecha de nacimiento");
         $usuario->setDireccion($datosUsuarios["useraddress"]??"Sin dirección");
@@ -224,5 +226,9 @@ class Usuario
         $usuario->setTelefono($telefonos);
 
         return $usuario;
+    }
+
+    public function save(){
+        UsuarioModel::guardarUsuario($this);
     }
 }//class

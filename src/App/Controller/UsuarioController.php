@@ -32,6 +32,9 @@ class UsuarioController implements InterfaceController
             $usuario = Usuario::crearUsuarioAPartirDeUnArray($_POST);
         }
 
+        //Guardar el usuario en la BBDD
+        $usuario->save();
+
         UsuarioModel::guardarUsuario($usuario);
 
         //Creación del usuario

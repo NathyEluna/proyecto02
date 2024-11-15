@@ -6,7 +6,7 @@ services:
       context: ./.docker
       dockerfile: Dockerfile
     container_name: proyecto2php
-  # Preparamos un volumen para almacenar nuestro código
+    # Preparamos un volumen para almacenar nuestro código
     volumes:
       - ./src/:/var/www/html
       - ./.docker/apache/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
@@ -37,7 +37,9 @@ services:
       - 3307:3306
     networks:
       - reserdawtions
+
 networks:
   reserdawtions:
-      name: reserdawtions
-      driver: bridge
+    name: reserdawtions
+    driver: bridge
+

@@ -2,15 +2,16 @@
 
 namespace App\Model;
 use App\Class\Usuario;
-use PDO;
+use \PDO;
 use PDOException;
 
 class UsuarioModel{
 
     private static function conectarABD():?PDO{
         try{
-            $conexion = new PDO("mysql:host=".NOMBRE_CONTAINER_DATABASE."; dbname=".NOMBRE_DATABASE, USUARIO_DATABASE, PASS_DATABASE);
+            $conexion = new PDO("mysql:host=".NOMBRE_CONTAINER_DATABASE.";dbname=".NOMBRE_DATABASE, USUARIO_DATABASE, PASS_DATABASE);
             $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $conexion;
         }catch(PDOException $e){
             echo "Fallo de conexión".$e->getMessage();
         }
@@ -31,8 +32,12 @@ class UsuarioModel{
                 :uuid, :username, :password, :dni, :email, STR_TO_DATE(:fechanac, '%d/%m/%Y'), :name, :surname,
                 :direccion, :calificacion, :tarjeta_pago, :datos_adicionales, :tipo)";
 
+        $sqlTelefono = "INSERT INTO TELEFONO(PREFIJO, NUMERO, UUID_USER)
+                        VALUES (:prefijo, :numero, :uuid_user)";
+
         //Para preparar a busca e ver se n tem nenhum codigo maliciono nas buscas, como um sql injection. fazer isso sempre.
         $sentenciaPreparada = $conexion->prepare($sql);
+        $sentenciaPreparadaTelefono = $conexion->prepare($sqlTelefono);
 
         //Enlazado de parametros dentro de la consulta
         $sentenciaPreparada->bindValue("uuid", $usuario->getUuid());
@@ -50,5 +55,20 @@ class UsuarioModel{
         $sentenciaPreparada->bindValue("tipo", $usuario->getTipoUser()->name);
 
         //La ejecucion de la consulta contra la base de datos
+        //Necesitamos guardar el usuario antes de guardar el telefono para que la FK funcione.
+        $sentenciaPreparada->execute();
+
+        //Realizamos un bucle para guardar todos los telefonos asociados.
+        foreach($usuario->getTelefono() as $telefono){
+            $sentenciaPreparadaTelefono->bindValue("prefijo", $telefono->getPrefijo());
+            $sentenciaPreparadaTelefono->bindValue("numero", $telefono->getNumero());
+            $sentenciaPreparadaTelefono->bindValue("uuid_user", $usuario->getUuid());
+            $sentenciaPreparadaTelefono->execute();
+        };
+
+    }//guardar usuario
+
+    public static function borrarUsuario(string $uuidUsuario){
+
     }
 }//class
