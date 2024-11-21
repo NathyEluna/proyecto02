@@ -2,6 +2,8 @@
 
 namespace App\Model;
 use App\Class\Usuario;
+use App\Exceptions\DeleteUserException;
+use App\Exceptions\ReadUserException;
 use \PDO;
 use PDOException;
 
@@ -22,17 +24,17 @@ class UsuarioModel{
         //Conexión a la base de datos
         $conexion = UsuarioModel::conectarABD();
 
-        echo $conexion->getAttribute(PDO::ATTR_CONNECTION_STATUS);
+        //echo $conexion->getAttribute(PDO::ATTR_CONNECTION_STATUS);
 
         //Creación de la consulta SQL
         $sql = "INSERT INTO USER(
-                 UUID, USERNAME, PASSWORD, DNI, EMAIL, FECHANAC, NAME, SURNAME,
-                 DIRECCION, CALIFICACION, TARJETA_PAGO, DATOS_ADICIONALES, TIPO) 
+                 USERUUID, USERNICK, USERPASS, USERDNI, USEREMAIL, USERBIRTHDATE, USERNAME, USERSURNAME,
+                 USERADDRESS, USERMARK, USERCARD, USERDATA, USERTYPE) 
                 VALUES(
                 :uuid, :username, :password, :dni, :email, STR_TO_DATE(:fechanac, '%d/%m/%Y'), :name, :surname,
                 :direccion, :calificacion, :tarjeta_pago, :datos_adicionales, :tipo)";
 
-        $sqlTelefono = "INSERT INTO TELEFONO(PREFIJO, NUMERO, UUID_USER)
+        $sqlTelefono = "INSERT INTO TELEFONO(PHONEPREFIX, PHONENUMBER, USERUUID)
                         VALUES (:prefijo, :numero, :uuid_user)";
 
         //Para preparar a busca e ver se n tem nenhum codigo maliciono nas buscas, como um sql injection. fazer isso sempre.
@@ -68,7 +70,48 @@ class UsuarioModel{
 
     }//guardar usuario
 
-    public static function borrarUsuario(string $uuidUsuario){
+    public static function borrarUsuario(string $uuidUsuario):bool{
+        $conexion = UsuarioModel::conectarABD();
 
-    }
+        $sql = "DELETE FROM USER WHERE USERUUID=?";
+
+        $sentenciaPreparada = $conexion->prepare($sql);
+        $sentenciaPreparada->bindValue(1, $uuidUsuario);
+        $sentenciaPreparada->execute();
+
+        //Gestionar los errores de ejecucion.
+        if($sentenciaPreparada->rowCount()==0){
+            throw new DeleteUserException();
+        }else{
+            return true;
+        }//else
+    }//borrar usuario
+
+    public static function leerUsuario($uuidUsuario):?Usuario{
+        //Crear una conexion con la base de datos
+        $conexion = UsuarioModel::conectarABD();
+
+        //Crear una variable con la sentencia sql que queremos ejecutar.
+        $sql = "SELECT USERUUID, USERNAME, USERSURNAME, USERPASS, USEREMAIL, 
+        USERADDRESS, DATE_FORMAT(USERBIRTHDATE, '%d/%m/%Y') AS USERBIRTHDATE, 
+        USERNICK, USERCARD, USERDATE, USERTYPE, USERMARK FROM USER WHERE USERUUID=:uuid";
+
+        //Preparar la sentencia a ejecutar
+        $sentenciaPreparada = $conexion->prepare($sql);
+
+        //Hacer la asignacion de los parametros de la sql al valor
+        $sentenciaPreparada->bindValue("uuid", $uuidUsuario);
+
+        //Ejecutar la consulta con los parametros ya cambiados en la base de datos
+        $sentenciaPreparada->execute();
+
+        if($sentenciaPreparada->rowCount()===0){
+            //Se ha producido un erro
+            throw new ReadUserException();
+        }else{
+            //Ler de la base de datos un usuario
+            $datosUsuario = $sentenciaPreparada->fetch(PDO::FETCH_ASSOC);
+            return Usuario::crearUsuarioAPartirDeUnArray($datosUsuario);
+        }//else
+    }//leer usuario
 }//class

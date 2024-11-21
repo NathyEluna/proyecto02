@@ -20,11 +20,11 @@ include_once DIRECTORIO_VISTAS."template/navegacion.php";
                 <div class="service">
                     <form method="post" action="/users">
                         <div class="mb-3">
-                            <label class="form-label" for="user">Nick del usuario</label>
+                            <label class="form-label" for="user">Nick de usuario</label>
                             <input class="form-control" id="user" name="usernick" type="text">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="dni">DNI de usuario</label>
+                            <label class="form-label" for="dni">DNI del usuario</label>
                             <input class="form-control" id="dni" name="userdni" type="text">
                         </div>
                         <div class="mb-3">
@@ -49,7 +49,7 @@ include_once DIRECTORIO_VISTAS."template/navegacion.php";
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="adress">Dirección</label>
-                            <input class="form-control" id="address" name="useraddress" type="text">
+                            <input class="form-control" id="adress" name="useradress" type="text">
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="phone">Teléfono de contacto</label>

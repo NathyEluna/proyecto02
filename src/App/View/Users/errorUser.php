@@ -56,7 +56,7 @@ include_once DIRECTORIO_VISTAS."template/navegacion.php";
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="adress">Dirección</label>
-                            <input class="form-control" id="adress" name="useraddress" type="text" value="<?=$_POST['useraddress']?>">
+                            <input class="form-control" id="adress" name="useradress" type="text" value="<?=$_POST['useradress']?>">
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="phone">Teléfono de contacto</label>

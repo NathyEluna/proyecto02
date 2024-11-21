@@ -7,7 +7,9 @@ use DateTime;
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator;
-class Usuario
+use JsonSerializable;
+
+class Usuario implements JsonSerializable
 {
     private string $uuid;
     private string $username;
@@ -22,9 +24,8 @@ class Usuario
     public ?array $reservas;
     private ?string $tarjertaPago;
     private float $calificacion;
-    private TipoUsuario $tipoUser;
     public ?array $datosAdicionales;
-
+    private TipoUsuario $tipoUser;
     //Métodos de la clase Usuario
 
     public function __construct(){
@@ -168,18 +169,40 @@ class Usuario
         return $this->datosAdicionales;
     }//getDatosAdicionales
 
-    public function setDatosAdicionales(array $datosAdicionales):Usuario{
-        $this->datosAdicionales = $datosAdicionales;
+    public function setDatosAdicionales(string|array $datosAdicionales):Usuario{
+        if(is_string($datosAdicionales)){
+            //Nos ha llegado una cadena JSON
+            $this->datosAdicionales=json_decode($datosAdicionales, true);
+        }else{
+            //Nos ha llegado un array con los datos adicionales de un usuario.
+            $this->datosAdicionales = $datosAdicionales;
+        }
         return $this;
     }//setDatosAdicionales
 
     //Espacio para funciones definidas por el progamador
+    public function jsonSerialize(): array{
+        return [
+            'useruuid'=>$this->uuid,
+            'usernick'=>$this->username,
+            'username'=>$this->name,
+            'usersurname'=>$this->surname,
+            'useremail'=>$this->email,
+            'useradress'=>$this->direccion,
+            'userdni'=>$this->dni,
+            'usercard'=>$this->tarjertaPago,
+            'userdata'=>json_encode($this->datosAdicionales),
+            'usermark'=>$this->calificacion,
+            'userphones'=>$this->telefono
+        ];
+    }
+
     public function calcularCalificacion():float{
         //TODO Pensar como califcicar a una persona dentro de la app.
         return 0.0;
     }
 
-    public static function filtrarDatosUsuario(array $datosUsuario):true|array{
+    public static function filtrarDatosUsuario(array $datosUsuario):false|array{
 
         try{
             Validator::key("usernick", Validator::stringType()->notEmpty()->length(3, null))
@@ -192,17 +215,18 @@ class Usuario
                 ->key("useraddress", Validator::stringType())
                 ->key("userphone", Validator::phone())
                 ->key("useraltphone", Validator::optional(Validator::phone()), mandatory: false)
+                ->key("userdata", Validator::optional(Validator::json()), mandatory: false)
                 ->assert($datosUsuario);
         }catch(NestedValidationException $exception){
             return $exception->getMessages();
         }//catch
 
-        return true;
+        return false;
     }
 
     public static function crearUsuarioAPartirDeUnArray(array $datosUsuarios):Usuario{
         $usuario = new Usuario();
-        $usuario->setUuid(Uuid::uuid4());
+        $usuario->setUuid($datosUsuarios["useruuid"]??Uuid::uuid4());
         $usuario->setUsername($datosUsuarios["usernick"]??"Sin nick");
         $usuario->setDni($datosUsuarios["userdni"]??"00000000A");
         $usuario->setName($datosUsuarios["username"]??"Sin nombre");
@@ -212,6 +236,10 @@ class Usuario
         $usuario->setEmail($datosUsuarios["useremail"]??"Sin email");
         $usuario->setFechaNac(DateTime::createFromFormat("d/m/Y", $datosUsuarios["userbirthdate"])??"Sin fecha de nacimiento");
         $usuario->setDireccion($datosUsuarios["useraddress"]??"Sin dirección");
+        $usuario->setDatosAdicionales($datosUsuarios["userdata"]??"Sin datos");
+        $usuario->setCalificacion($datosUsuarios["usermark"]??0.0);
+        $usuario->tarjertaPago($datosUsuarios["usercard"]??"Sin tarjeta");
+
         $telefonos = [];
 
         if(isset($datosUsuarios["userphone"])){
@@ -230,5 +258,13 @@ class Usuario
 
     public function save(){
         UsuarioModel::guardarUsuario($this);
+    }
+
+    public function edit(){
+        UsuarioModel::editarUsuario($this);
+    }
+
+    public function delete(){
+        UsuarioModel::borrarUsuario($this);
     }
 }//class

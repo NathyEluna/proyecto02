@@ -1,7 +1,9 @@
 <?php
 namespace App\Class;
+use JsonSerializable;
+use Respect\Validation\Rules\Json;
 
-class Telefono
+class Telefono implements JsonSerializable
 {
     private string $prefijo;
     private string $numero;
@@ -31,6 +33,7 @@ class Telefono
         return $this;
     }//construct
 
+    //Espacio para las funciones definidas por el programados.
     public function comprobarPrefijo(string $prefijo):bool{
         return isset($prefijos[$prefijo])?true:false;
     }
@@ -87,4 +90,12 @@ class Telefono
 
         return $prefijoSinSimbolos;
     }//obtener prefijo desde string
+
+    public function jsonSerialize(): array
+    {
+        return [
+            "prefijo"=>$this->prefijo,
+            "numero"=>$this->numero
+        ];
+    }
 }//class

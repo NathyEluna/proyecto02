@@ -5,6 +5,7 @@ include_once "InterfaceController.php";
 
 use App\Class\Usuario;
 use App\Controller\InterfaceController;
+use App\Exceptions\DeleteUserException;
 use App\Model\UsuarioModel;
 use Ramsey\Uuid\Uuid;
 
@@ -23,7 +24,6 @@ class UsuarioController implements InterfaceController
     //POST /users
     public function store(){
         //Guardaria en la base de datos el usuario
-
         //Validación del usuario. En packagist instalar la libreria symfony/validator.
         $errores=Usuario::filtrarDatosUsuario($_POST);
         if (is_array($errores)){
@@ -38,11 +38,7 @@ class UsuarioController implements InterfaceController
         UsuarioModel::guardarUsuario($usuario);
 
         //Creación del usuario
-
-
-
-        //echo Uuid::uuid4();
-        echo "Funcion para guardar un usuario.";
+        echo json_decode($usuario);
     }
 
     //GET /users/{id_usuario}/edit
@@ -60,13 +56,21 @@ class UsuarioController implements InterfaceController
     //GET /users/{id_usuario}
     public function show($id){
         //Mostraria los datos de un solo usuario
-        echo "Mostrar los datos de un usuario $id.";
-    }
+        if(!Uuid::uuid4($id)){
+            //Mostrar un error id en formato invalido.
+        }else{
+            var_dump(UsuarioModel::leerUsuario($id));
+        }//else
+    }//show
 
     //DELETE /users/{id_usuario}
     public function destroy($id){
         //Borrar los datos de un usuario
-        echo "Funcion para borrar los datos del usuario $id.";
-
-    }
-};
+        try{
+            UsuarioModel::borrarUsuario($id);
+            echo "Borrado correcto.";
+        }catch(DeleteUserException $e){
+            echo $e->getMessage();
+        }//catch
+    }//destroy
+}//class
