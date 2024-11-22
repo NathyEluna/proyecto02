@@ -1,6 +1,7 @@
 <?php
 namespace App\Class;
 include_once "Enum/TipoUsuario.php";
+
 use App\Class\Enum\TipoUsuario;
 use App\Model\UsuarioModel;
 use DateTime;
@@ -232,13 +233,21 @@ class Usuario implements JsonSerializable
         $usuario->setName($datosUsuarios["username"]??"Sin nombre");
         $usuario->setSurname($datosUsuarios["usersurname"]??"Sin apellido");
         //Además de almacenar el password lo encriptamos
-        $usuario->setPassword(password_hash($datosUsuarios["userpass"], PASSWORD_DEFAULT)??"Sin contraseña");
+
+        if(password_get_info($datosUsuarios["userpass"])["algo"]=="2y"){
+            //Lectura de la base de datos con el password ya encriptado
+            $usuario->setPassword($datosUsuarios["userpass"]);
+        }else{
+            //Obtenemos los datos del formulario
+            $usuario->setPassword(password_hash($datosUsuarios["userpass"], PASSWORD_DEFAULT)??"Sin contraseña");
+        }//else
+
         $usuario->setEmail($datosUsuarios["useremail"]??"Sin email");
         $usuario->setFechaNac(DateTime::createFromFormat("d/m/Y", $datosUsuarios["userbirthdate"])??"Sin fecha de nacimiento");
         $usuario->setDireccion($datosUsuarios["useraddress"]??"Sin dirección");
         $usuario->setDatosAdicionales($datosUsuarios["userdata"]??"Sin datos");
         $usuario->setCalificacion($datosUsuarios["usermark"]??0.0);
-        $usuario->tarjertaPago($datosUsuarios["usercard"]??"Sin tarjeta");
+        $usuario->setTarjertaPago($datosUsuarios["usercard"]??"Sin tarjeta");
 
         $telefonos = [];
 
@@ -258,13 +267,13 @@ class Usuario implements JsonSerializable
 
     public function save(){
         UsuarioModel::guardarUsuario($this);
-    }
+    }//save
 
     public function edit(){
         UsuarioModel::editarUsuario($this);
-    }
+    }//edit
 
     public function delete(){
         UsuarioModel::borrarUsuario($this);
-    }
+    }//delete
 }//class

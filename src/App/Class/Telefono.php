@@ -34,7 +34,7 @@ class Telefono implements JsonSerializable
     }//construct
 
     //Espacio para las funciones definidas por el programados.
-    public function comprobarPrefijo(string $prefijo):bool{
+    public static function comprobarPrefijo(string $prefijo):bool{
         return isset($prefijos[$prefijo])?true:false;
     }
 
@@ -59,6 +59,15 @@ class Telefono implements JsonSerializable
         }
     }//crear telefono desde string
 
+    public static function crearTelefonosDesdeArray(array $telefonos):array{
+        $arrayObjetosTelefono= [];
+
+        foreach($telefonos as $telefono){
+            $arrayObjetosTelefono[] = new Telefono($telefono["phonenumber"], $telefono["phoneprefix"]);
+        }
+        return $arrayObjetosTelefono;
+    }
+
     private static function obtenerNumeroDesdeUnString(string $telefono):?string{
         $telefonoSinEspacios = trim($telefono);
 
@@ -68,8 +77,8 @@ class Telefono implements JsonSerializable
             return $telefonoSinEspacios;
         }else{
             return substr($telefonoSinEspacios, -9);
-        }
-    }
+        }//else
+    }//obtener numede desde un string
 
     private static function obtenerPrefijoDesdeUnString(string $telefono):?string{
         if(strlen($telefono) > 9){
@@ -84,11 +93,11 @@ class Telefono implements JsonSerializable
                     $prefijoSinSimbolos.= $prefijo[$i];
                 }//if
             }//for
+
+            return $prefijoSinSimbolos;
         }else{
             return null;
         }//else
-
-        return $prefijoSinSimbolos;
     }//obtener prefijo desde string
 
     public function jsonSerialize(): array

@@ -2,7 +2,9 @@
 
 namespace App\Model;
 use App\Class\Usuario;
+use App\Class\Telefono;
 use App\Exceptions\DeleteUserException;
+use App\Exceptions\EditUserException;
 use App\Exceptions\ReadUserException;
 use \PDO;
 use PDOException;
@@ -34,7 +36,7 @@ class UsuarioModel{
                 :uuid, :username, :password, :dni, :email, STR_TO_DATE(:fechanac, '%d/%m/%Y'), :name, :surname,
                 :direccion, :calificacion, :tarjeta_pago, :datos_adicionales, :tipo)";
 
-        $sqlTelefono = "INSERT INTO TELEFONO(PHONEPREFIX, PHONENUMBER, USERUUID)
+        $sqlTelefono = "INSERT INTO PHONE(PHONEPREFIX, PHONENUMBER, USERUUID)
                         VALUES (:prefijo, :numero, :uuid_user)";
 
         //Para preparar a busca e ver se n tem nenhum codigo maliciono nas buscas, como um sql injection. fazer isso sempre.
@@ -111,7 +113,60 @@ class UsuarioModel{
         }else{
             //Ler de la base de datos un usuario
             $datosUsuario = $sentenciaPreparada->fetch(PDO::FETCH_ASSOC);
-            return Usuario::crearUsuarioAPartirDeUnArray($datosUsuario);
+
+            //Creamos la consulta necesario para conseguir los telefonos de la tabla phone
+            $sqlTelefonos = "SELECT PHONEPREFIX, PHONENUMBER FROM PHONE WHERE USERUUID=?";
+            $sentenciaTelefonos = $conexion->prepare($sqlTelefonos);
+            $sentenciaTelefonos->execute([$uuidUsuario]);
+
+            $telefonos = Telefono::crearTelefonosDesdeArray($sentenciaTelefonos->fetchAll(PDO::FETCH_ASSOC));
+
+            $usuario = Usuario::crearUsuarioAPartirDeUnArray($datosUsuario);
+            $usuario->setTelefono($telefonos);
+
+            return $usuario;
         }//else
     }//leer usuario
+
+    public static function editarUsuario(Usuario $usuario):?Usuario{
+        //Creamos la conexión a la base de datos
+        $conexion =UsuarioModel::conectarABD();
+
+        $sql="UPDATE user SET USERNICK=:usernick,
+                     USERPASS=:userpass,
+                     USERDNI=:userdni,
+                     USEREMAIL=:useremail,
+                     USERBIRTHDATE=:userbirthdate,
+                     USERNAME=:username,
+                     USERSURNAME=:usersurname,
+                     USERADDRESS=:useraddress,
+                     USERMARK=:usermark,
+                     USERCARD=:usercard,
+                     USERDATA=:userdata,
+                     USERTYPE=:usertype WHERE USERUUID=:useruuid";
+
+        $sentenciaPreparada=$conexion->prepare($sql);
+
+        $sentenciaPreparada->bindValue("useruuid", $usuario->getUuid());
+        $sentenciaPreparada->bindValue("usernick", $usuario->getUsername());
+        $sentenciaPreparada->bindValue("userpass", $usuario->getPassword());
+        $sentenciaPreparada->bindValue("userdni", $usuario->getDni());
+        $sentenciaPreparada->bindValue("useremail", $usuario->getEmail());
+        $sentenciaPreparada->bindValue("userbirtdate", $usuario->getFechanac()->format("d/m/Y"));
+        $sentenciaPreparada->bindValue("username", $usuario->getName());
+        $sentenciaPreparada->bindValue("usersurname", $usuario->getSurname());
+        $sentenciaPreparada->bindValue("useraddress", $usuario->getDireccion());
+        $sentenciaPreparada->bindValue("usermark", $usuario->getCalificacion());
+        $sentenciaPreparada->bindValue("usercard", $usuario->getTarjertaPago());
+        $sentenciaPreparada->bindValue("userdata", json_encode($usuario->getDatosAdicionales()));
+        $sentenciaPreparada->bindValue("usertype", $usuario->getTipoUser()->name);
+
+        $sentenciaPreparada->execute();
+
+        if ($sentenciaPreparada->rowCount()==0){
+            throw new EditUserException();
+        }else{
+            return $usuario;
+        }//else
+    }//editar usuario
 }//class
